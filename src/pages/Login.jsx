@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { supabase } from "../lib/supabase";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
-
- 
+  const navigate = useNavigate();
 
   const signIn = async () => {
     setMsg("");
@@ -29,9 +29,9 @@ export default function Login() {
 
     const role = pErr ? "user" : profile.role;
 
-    if (role === "admin") window.location.href = "/admin";
-    else if (role === "admin_lite") window.location.href = "/admin-lite";
-    else window.location.href = "/";
+    if (role === "admin") navigate("/admin");
+    else if (role === "admin_lite") navigate("/admin-lite");
+    else navigate("/");
   };
 
   return (
