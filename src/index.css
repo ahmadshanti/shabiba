@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+  color-scheme: light;
+}
+
+body{
+  @apply bg-brand-50 text-ink;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, "Noto Sans Arabic", "Noto Sans", "Helvetica Neue", sans-serif;
+}
+
+.btn-primary{
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2
+  bg-brand-500 text-ink font-semibold shadow-soft
+  hover:bg-brand-400 active:bg-brand-600 transition;
+}
+
+.card{
+  @apply rounded-xl2 bg-white shadow-soft border border-brand-100;
+}
+
+.container-app{
+  @apply mx-auto w-full max-w-6xl px-4;
+}
