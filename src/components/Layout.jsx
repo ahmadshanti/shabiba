@@ -32,7 +32,7 @@ export default function Layout() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
-  // ✅ سكّر المنيو لما تكبس برا
+  // إغلاق القائمة عند الضغط خارجها
   useEffect(() => {
     const onDocClick = (e) => {
       if (!menuOpen) return;
@@ -44,7 +44,7 @@ export default function Layout() {
     return () => document.removeEventListener("mousedown", onDocClick);
   }, [menuOpen]);
 
-  // ✅ سكّر المنيو عند ضغط ESC
+  // إغلاق القائمة عند الضغط على ESC
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") setMenuOpen(false);
@@ -55,10 +55,11 @@ export default function Layout() {
 
   return (
     <div dir="rtl" className="min-h-screen">
-      {/* ===== Header / Navbar ===== */}
+      {/* ===== Header ===== */}
       <header className="sticky top-0 z-50 bg-brand-50/80 backdrop-blur border-b border-brand-100">
         <div className="container-app py-3 flex items-center justify-between gap-3">
-          {/* Logo + Title */}
+
+          {/* Logo */}
           <div className="flex items-center gap-3">
             <img
               src="/logo.jpg"
@@ -83,7 +84,7 @@ export default function Layout() {
             ))}
           </nav>
 
-          {/* ===== Mobile menu ===== */}
+          {/* ===== Mobile Menu ===== */}
           <div className="md:hidden relative" ref={menuRef}>
             <button
               type="button"
@@ -97,7 +98,7 @@ export default function Layout() {
               القائمة
             </button>
 
-            {/* Overlay */}
+            {/* خلفية سوداء خفيفة */}
             {menuOpen && (
               <div
                 className="fixed inset-0 bg-black/20 z-40"
@@ -105,12 +106,12 @@ export default function Layout() {
               />
             )}
 
-            {/* Menu dropdown */}
+            {/* القائمة */}
             <div
               className={[
-                "absolute mt-3 right-0 z-50 w-72 max-w-[85vw]",
+                "absolute mt-3 left-0 z-50 w-72 max-w-[85vw]",
                 "bg-white border border-brand-100 rounded-2xl shadow-xl p-2",
-                "origin-top-right transition duration-200",
+                "origin-top-left transition duration-200",
                 menuOpen
                   ? "scale-100 opacity-100"
                   : "pointer-events-none scale-95 opacity-0",
@@ -150,7 +151,7 @@ export default function Layout() {
         </div>
       </header>
 
-      {/* ===== Main Content ===== */}
+      {/* ===== Content ===== */}
       <main className="container-app py-8">
         <Outlet />
       </main>
