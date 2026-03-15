@@ -27,11 +27,16 @@ export default function Login() {
       .eq("id", data.user.id)
       .single();
 
-    const role = pErr ? "user" : profile.role;
+    const role = pErr || !profile ? "user" : profile.role;
 
-    if (role === "admin") navigate("/admin");
-    else if (role === "admin_lite") navigate("/admin-lite");
-    else navigate("/");
+    if (role === "admin") {
+      navigate("/admin");
+    } else if (role === "admin_lite") {
+      navigate("/admin-lite");
+    } else {
+      await supabase.auth.signOut();
+      setMsg("هذا الحساب غير مخول للدخول إلى لوحة التحكم");
+    }
   };
 
   return (
@@ -53,11 +58,14 @@ export default function Login() {
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <button onClick={signIn} className="bg-black text-white px-4 py-2 rounded w-full">
+      <button
+        onClick={signIn}
+        className="bg-black text-white px-4 py-2 rounded w-full"
+      >
         دخول
       </button>
 
-      {msg && <div className="text-sm">{msg}</div>}
+      {msg && <div className="text-sm text-red-600">{msg}</div>}
     </div>
   );
 }

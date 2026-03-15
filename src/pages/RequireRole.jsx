@@ -1,48 +1,50 @@
 import { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 
-/**
- * RequireRole:
- * - يمنع الوصول إلا للمسجلين دخول
- * - ويتأكد أن role ضمن allowedRoles
- *
- * الاستخدام:
- * <RequireRole allowedRoles={["admin"]}> <Admin/> </RequireRole>
- */
 export default function RequireRole({ allowedRoles, children }) {
   const [loading, setLoading] = useState(true);
   const [allowed, setAllowed] = useState(false);
 
   useEffect(() => {
-    (async () => {
-      // لازم يكون داخل
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        window.location.href = "/login";
+    const checkAccess = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        setAllowed(false);
+        setLoading(false);
         return;
       }
 
-      // اقرأ الدور من profiles
       const { data: profile, error } = await supabase
         .from("profiles")
         .select("role")
-        .eq("id", user.id)
+        .eq("id", session.user.id)
         .single();
 
-      const role = error ? "user" : profile.role;
+      const role = error || !profile ? "user" : profile.role;
 
-      if (!allowedRoles.includes(role)) {
-        window.location.href = "/"; // أو صفحة NotAllowed
-        return;
+      if (allowedRoles.includes(role)) {
+        setAllowed(true);
+      } else {
+        setAllowed(false);
       }
 
-      setAllowed(true);
       setLoading(false);
-    })();
+    };
+
+    checkAccess();
   }, [allowedRoles]);
 
-  if (loading) return <div className="p-4">Loading...</div>;
-  if (!allowed) return null;
+  if (loading) {
+    return <div className="p-4">Loading...</div>;
+  }
+
+  if (!allowed) {
+    return <Navigate to="/login" replace />;
+  }
 
   return children;
 }

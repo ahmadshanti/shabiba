@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 
 import Home from "./pages/Home";
@@ -20,7 +20,7 @@ import RequireRole from "./pages/RequireRole";
 
 export default function App() {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
@@ -60,6 +60,6 @@ export default function App() {
           />
         </Route>
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
   );
 }
