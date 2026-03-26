@@ -209,7 +209,7 @@ export default function Layout({ darkMode, setDarkMode }) {
 
 <div className="flex items-center gap-3 flex-wrap justify-center">
   <a
-    href="https://facebook.com/"
+    href="https://www.facebook.com/shabiba.nnu"
     target="_blank"
     rel="noreferrer"
     className="h-11 w-11 rounded-full border border-brand-200 dark:border-yellow-700 bg-white/90 dark:bg-[#221c08] flex items-center justify-center text-slate-700 dark:text-yellow-100 shadow-sm hover:shadow-[0_0_20px_rgba(251,191,36,0.18)] hover:border-brand-300 dark:hover:border-yellow-500 hover:-translate-y-0.5 dark:hover:bg-[#2a220a] transition-all duration-300"
@@ -222,7 +222,7 @@ export default function Layout({ darkMode, setDarkMode }) {
   </a>
 
   <a
-    href="https://instagram.com/"
+    href="https://www.instagram.com/shabiba.nnu"
     target="_blank"
     rel="noreferrer"
     className="h-11 w-11 rounded-full border border-brand-200 dark:border-yellow-700 bg-white/90 dark:bg-[#221c08] flex items-center justify-center text-slate-700 dark:text-yellow-100 shadow-sm hover:shadow-[0_0_20px_rgba(251,191,36,0.18)] hover:border-brand-300 dark:hover:border-yellow-500 hover:-translate-y-0.5 dark:hover:bg-[#2a220a] transition-all duration-300"
@@ -235,7 +235,7 @@ export default function Layout({ darkMode, setDarkMode }) {
   </a>
 
   <a
-    href="https://tiktok.com/"
+    href="https://tiktok.com/@shabiba.nnu"
     target="_blank"
     rel="noreferrer"
     className="h-11 w-11 rounded-full border border-brand-200 dark:border-yellow-700 bg-white/90 dark:bg-[#221c08] flex items-center justify-center text-slate-700 dark:text-yellow-100 shadow-sm hover:shadow-[0_0_20px_rgba(251,191,36,0.18)] hover:border-brand-300 dark:hover:border-yellow-500 hover:-translate-y-0.5 dark:hover:bg-[#2a220a] transition-all duration-300"
@@ -248,7 +248,7 @@ export default function Layout({ darkMode, setDarkMode }) {
   </a>
 
   <a
-    href="https://x.com/"
+    href="https://x.com/shabiba_nnu"
     target="_blank"
     rel="noreferrer"
     className="h-11 w-11 rounded-full border border-brand-200 dark:border-yellow-700 bg-white/90 dark:bg-[#221c08] flex items-center justify-center text-slate-700 dark:text-yellow-100 shadow-sm hover:shadow-[0_0_20px_rgba(251,191,36,0.18)] hover:border-brand-300 dark:hover:border-yellow-500 hover:-translate-y-0.5 dark:hover:bg-[#2a220a] transition-all duration-300"
@@ -261,7 +261,7 @@ export default function Layout({ darkMode, setDarkMode }) {
   </a>
 
   <a
-    href="https://youtube.com/"
+    href="https://www.youtube.com/@shabiba_nnu"
     target="_blank"
     rel="noreferrer"
     className="h-11 w-11 rounded-full border border-brand-200 dark:border-yellow-700 bg-white/90 dark:bg-[#221c08] flex items-center justify-center text-slate-700 dark:text-yellow-100 shadow-sm hover:shadow-[0_0_20px_rgba(251,191,36,0.18)] hover:border-brand-300 dark:hover:border-yellow-500 hover:-translate-y-0.5 dark:hover:bg-[#2a220a] transition-all duration-300"
@@ -274,7 +274,7 @@ export default function Layout({ darkMode, setDarkMode }) {
   </a>
 
   <a
-    href="https://t.me/"
+    href="https://t.me/shabiba_nnu"
     target="_blank"
     rel="noreferrer"
     className="h-11 w-11 rounded-full border border-brand-200 dark:border-yellow-700 bg-white/90 dark:bg-[#221c08] flex items-center justify-center text-slate-700 dark:text-yellow-100 shadow-sm hover:shadow-[0_0_20px_rgba(251,191,36,0.18)] hover:border-brand-300 dark:hover:border-yellow-500 hover:-translate-y-0.5 dark:hover:bg-[#2a220a] transition-all duration-300"
@@ -287,7 +287,7 @@ export default function Layout({ darkMode, setDarkMode }) {
   </a>
 
   <a
-    href="https://wa.me/"
+    href="https://whatsapp.com/channel/0029VaJSDBkGk1Fx0F7vgD0D"
     target="_blank"
     rel="noreferrer"
     className="h-11 w-11 rounded-full border border-brand-200 dark:border-yellow-700 bg-white/90 dark:bg-[#221c08] flex items-center justify-center text-slate-700 dark:text-yellow-100 shadow-sm hover:shadow-[0_0_20px_rgba(251,191,36,0.18)] hover:border-brand-300 dark:hover:border-yellow-500 hover:-translate-y-0.5 dark:hover:bg-[#2a220a] transition-all duration-300"
