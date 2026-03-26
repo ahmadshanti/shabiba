@@ -17,8 +17,16 @@ export default function CollegeResources() {
       setErr("");
 
       const [cRes, mRes] = await Promise.all([
-        supabase.from("colleges").select("id,name,description").eq("id", collegeId).single(),
-        supabase.from("majors").select("id,name,description").eq("college_id", collegeId).order("name"),
+        supabase
+          .from("colleges")
+          .select("id,name,description")
+          .eq("id", collegeId)
+          .single(),
+        supabase
+          .from("majors")
+          .select("id,name,description")
+          .eq("college_id", collegeId)
+          .order("name"),
       ]);
 
       if (ignore) return;
@@ -44,7 +52,7 @@ export default function CollegeResources() {
       <div className="flex items-center justify-between">
         <Link
           to="/resources"
-          className="inline-flex items-center gap-2 font-semibold hover:bg-brand-100 rounded-xl px-3 py-2 transition"
+          className="inline-flex items-center gap-2 font-semibold hover:bg-brand-100 rounded-xl px-3 py-2 transition dark:hover:bg-[#2a220a] dark:text-yellow-100"
         >
           ← رجوع للكليات
         </Link>
@@ -53,22 +61,31 @@ export default function CollegeResources() {
       <div className="card p-6">
         {loading ? (
           <div className="animate-pulse">
-            <div className="h-6 w-2/3 bg-slate-100 rounded" />
-            <div className="mt-2 h-4 w-1/2 bg-slate-100 rounded" />
+            <div className="h-6 w-2/3 bg-slate-100 dark:bg-[#2a220a] rounded" />
+            <div className="mt-2 h-4 w-1/2 bg-slate-100 dark:bg-[#2a220a] rounded" />
           </div>
         ) : err ? (
           <div>
-            <div className="font-bold text-red-600">صار خطأ</div>
-            <div className="mt-2 text-sm">{err}</div>
+            <div className="font-bold text-red-600 dark:text-red-400">
+              صار خطأ
+            </div>
+            <div className="mt-2 text-sm dark:text-yellow-100/80">{err}</div>
           </div>
         ) : (
           <>
-            <div className="text-sm text-slate-500">الكلية</div>
+            <div className="text-sm text-slate-500 dark:text-yellow-100/60">
+              الكلية
+            </div>
+
             <h1 className="mt-2 text-2xl font-extrabold">{college?.name}</h1>
+
             {college?.description && (
-              <p className="mt-2 text-slate-600 text-sm">{college.description}</p>
+              <p className="mt-2 text-slate-600 dark:text-yellow-100/80 text-sm">
+                {college.description}
+              </p>
             )}
-            <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-brand-100 px-3 py-1 text-sm font-semibold">
+
+            <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-brand-100 px-3 py-1 text-sm font-semibold dark:bg-yellow-100/10 dark:border dark:border-yellow-700 dark:text-yellow-100">
               اختر تخصص لعرض المواد
             </div>
           </>
@@ -82,12 +99,19 @@ export default function CollegeResources() {
             to={`/resources/majors/${m.id}`}
             className="card p-5 hover:-translate-y-0.5 transition"
           >
-            <div className="text-sm text-slate-500">تخصص</div>
+            <div className="text-sm text-slate-500 dark:text-yellow-100/60">
+              تخصص
+            </div>
+
             <div className="mt-2 text-lg font-extrabold">{m.name}</div>
+
             {m.description && (
-              <p className="mt-2 text-sm text-slate-600">{m.description}</p>
+              <p className="mt-2 text-sm text-slate-600 dark:text-yellow-100/80">
+                {m.description}
+              </p>
             )}
-            <div className="mt-4 inline-flex font-semibold text-ink underline decoration-brand-300">
+
+            <div className="mt-4 inline-flex font-semibold text-brand-800 underline decoration-brand-300 hover:text-brand-900 dark:text-yellow-100 dark:decoration-yellow-400 dark:hover:text-yellow-300">
               عرض المواد →
             </div>
           </Link>

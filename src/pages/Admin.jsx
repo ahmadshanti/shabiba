@@ -28,20 +28,63 @@ function SimpleCrud({ table, title, columns, defaultRow }) {
   const [form, setForm] = useState(defaultRow);
   const [editingId, setEditingId] = useState(null);
   const [msg, setMsg] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   const load = async () => {
     setMsg("");
-    const { data, error } = await supabase.from(table).select("*").order("created_at", { ascending: false });
+    const { data, error } = await supabase
+      .from(table)
+      .select("*")
+      .order("created_at", { ascending: false });
+
     if (error) setMsg("خطأ: " + error.message);
     else setRows(data || []);
   };
 
-  useEffect(() => { load(); }, [table]);
+  useEffect(() => {
+    load();
+  }, [table]);
+
+  const uploadImage = async (file) => {
+    try {
+      setUploading(true);
+
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${table}-${Date.now()}.${fileExt}`;
+      const filePath = `${table}/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("site-images")
+        .upload(filePath, file);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data } = supabase.storage
+        .from("site-images")
+        .getPublicUrl(filePath);
+
+      return data.publicUrl;
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const onSubmit = async () => {
     setMsg("");
+
+    if (uploading) {
+      setMsg("جاري رفع الصورة، انتظر قليلًا...");
+      return;
+    }
+
     if (editingId) {
-      const { error } = await supabase.from(table).update(form).eq("id", editingId);
+      const { error } = await supabase
+        .from(table)
+        .update(form)
+        .eq("id", editingId);
+
       if (error) setMsg("خطأ: " + error.message);
       else {
         setMsg("✅ تم التعديل");
@@ -51,6 +94,7 @@ function SimpleCrud({ table, title, columns, defaultRow }) {
       }
     } else {
       const { error } = await supabase.from(table).insert(form);
+
       if (error) setMsg("خطأ: " + error.message);
       else {
         setMsg("✅ تمت الإضافة");
@@ -63,16 +107,20 @@ function SimpleCrud({ table, title, columns, defaultRow }) {
   const onEdit = (r) => {
     setMsg("");
     setEditingId(r.id);
-    // خذ فقط الأعمدة اللي بتهمنا
+
     const f = {};
-    for (const c of columns) f[c.key] = r[c.key] ?? "";
+    for (const c of columns) {
+      f[c.key] = r[c.key] ?? "";
+    }
     setForm(f);
   };
 
   const onDelete = async (id) => {
     if (!confirm("متأكد بدك تحذف؟")) return;
+
     setMsg("");
     const { error } = await supabase.from(table).delete().eq("id", id);
+
     if (error) setMsg("خطأ: " + error.message);
     else {
       setMsg("✅ تم الحذف");
@@ -94,13 +142,49 @@ function SimpleCrud({ table, title, columns, defaultRow }) {
                 <textarea
                   className="border p-2 w-full"
                   value={form[c.key] ?? ""}
-                  onChange={(e) => setForm({ ...form, [c.key]: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, [c.key]: e.target.value })
+                  }
                 />
+              ) : c.type === "file" ? (
+                <div className="space-y-2">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="border p-2 w-full"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+
+                      try {
+                        setMsg("جاري رفع الصورة...");
+                        const publicUrl = await uploadImage(file);
+                        setForm((prev) => ({
+                          ...prev,
+                          [c.key]: publicUrl,
+                        }));
+                        setMsg("✅ تم رفع الصورة");
+                      } catch (error) {
+                        setMsg("خطأ في رفع الصورة: " + error.message);
+                      }
+                    }}
+                  />
+
+                  {form[c.key] && (
+                    <img
+                      src={form[c.key]}
+                      alt="preview"
+                      className="w-40 rounded border"
+                    />
+                  )}
+                </div>
               ) : (
                 <input
                   className="border p-2 w-full"
                   value={form[c.key] ?? ""}
-                  onChange={(e) => setForm({ ...form, [c.key]: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, [c.key]: e.target.value })
+                  }
                 />
               )}
             </Field>
@@ -108,9 +192,13 @@ function SimpleCrud({ table, title, columns, defaultRow }) {
         </div>
 
         <div className="flex gap-2">
-          <button onClick={onSubmit} className="bg-black text-white px-4 py-2 rounded">
+          <button
+            onClick={onSubmit}
+            className="bg-black text-white px-4 py-2 rounded"
+          >
             {editingId ? "حفظ التعديل" : "إضافة"}
           </button>
+
           {editingId && (
             <button
               onClick={() => {
@@ -135,7 +223,9 @@ function SimpleCrud({ table, title, columns, defaultRow }) {
             <thead>
               <tr className="border-b">
                 {columns.map((c) => (
-                  <th key={c.key} className="text-right p-2">{c.label}</th>
+                  <th key={c.key} className="text-right p-2">
+                    {c.label}
+                  </th>
                 ))}
                 <th className="text-right p-2">إجراءات</th>
               </tr>
@@ -144,17 +234,39 @@ function SimpleCrud({ table, title, columns, defaultRow }) {
               {rows.map((r) => (
                 <tr key={r.id} className="border-b">
                   {columns.map((c) => (
-                    <td key={c.key} className="p-2">{String(r[c.key] ?? "")}</td>
+                    <td key={c.key} className="p-2">
+                      {c.type === "file" && r[c.key] ? (
+                        <img
+                          src={r[c.key]}
+                          alt="item"
+                          className="w-24 rounded border"
+                        />
+                      ) : (
+                        String(r[c.key] ?? "")
+                      )}
+                    </td>
                   ))}
                   <td className="p-2 flex gap-2">
-                    <button className="border px-3 py-1 rounded" onClick={() => onEdit(r)}>تعديل</button>
-                    <button className="border px-3 py-1 rounded" onClick={() => onDelete(r.id)}>حذف</button>
+                    <button
+                      className="border px-3 py-1 rounded"
+                      onClick={() => onEdit(r)}
+                    >
+                      تعديل
+                    </button>
+                    <button
+                      className="border px-3 py-1 rounded"
+                      onClick={() => onDelete(r.id)}
+                    >
+                      حذف
+                    </button>
                   </td>
                 </tr>
               ))}
               {!rows.length && (
                 <tr>
-                  <td className="p-2" colSpan={columns.length + 1}>لا يوجد بيانات</td>
+                  <td className="p-2" colSpan={columns.length + 1}>
+                    لا يوجد بيانات
+                  </td>
                 </tr>
               )}
             </tbody>
@@ -162,41 +274,6 @@ function SimpleCrud({ table, title, columns, defaultRow }) {
         </div>
       </div>
     </div>
-  );
-}
-
-// ===== Majors (needs college dropdown) =====
-function MajorsCrud({ colleges }) {
-  return (
-    <RelCrud
-      title="التخصصات"
-      table="majors"
-      parentLabel="الكلية"
-      parentKey="college_id"
-      parentOptions={colleges.map((c) => ({ value: c.id, label: c.name }))}
-      fields={[
-        { key: "name", label: "اسم التخصص" },
-        { key: "description", label: "وصف", type: "textarea" },
-      ]}
-    />
-  );
-}
-
-// ===== Materials (needs major dropdown) =====
-function MaterialsCrud({ majors }) {
-  return (
-    <RelCrud
-      title="المواد"
-      table="materials"
-      parentLabel="التخصص"
-      parentKey="major_id"
-      parentOptions={majors.map((m) => ({ value: m.id, label: m.name }))}
-      fields={[
-        { key: "course_name", label: "اسم المادة" },
-        { key: "course_code", label: "رمز المادة" },
-        { key: "year_level", label: "السنة (رقم)" },
-      ]}
-    />
   );
 }
 
@@ -457,7 +534,7 @@ export default function Admin() {
             columns={[
               { key: "name", label: "اسم الكلية" },
               { key: "description", label: "وصف", type: "textarea" },
-              { key: "image_url", label: "رابط صورة" },
+              { key: "image_url", label: "صورة", type: "file" },
             ]}
           />
         )}
@@ -466,17 +543,18 @@ export default function Admin() {
 
         {tab === "materials" && <MaterialsCrud majors={majors} />}
 
-        {tab === "announcements" && (
-          <SimpleCrud
-            table="announcements"
-            title="إدارة الإعلانات"
-            defaultRow={{ title: "", content: "" }}
-            columns={[
-              { key: "title", label: "العنوان" },
-              { key: "content", label: "المحتوى", type: "textarea" },
-            ]}
-          />
-        )}
+       {tab === "announcements" && (
+  <SimpleCrud
+    table="announcements"
+    title="إدارة الإعلانات"
+    defaultRow={{ title: "", body: "", image_url: "" }}
+    columns={[
+      { key: "title", label: "العنوان" },
+      { key: "body", label: "المحتوى", type: "textarea" },
+      {key: "image_url", label: "صورة", type: "file" },
+    ]}
+  />
+)}
 
         {tab === "faq" && (
           <SimpleCrud

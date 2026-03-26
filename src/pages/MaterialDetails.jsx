@@ -4,18 +4,22 @@ import { supabase } from "../lib/supabase";
 
 function FileRow({ f }) {
   const isPdf = (f.file_type || "").toLowerCase() === "pdf";
+
   return (
     <a
       href={f.file_url}
       target="_blank"
       rel="noreferrer"
-      className="flex items-center justify-between gap-3 rounded-xl border border-brand-100 p-4 hover:bg-brand-50 transition"
+      className="flex items-center justify-between gap-3 rounded-xl border border-brand-100 p-4 hover:bg-brand-50 transition dark:border-yellow-700 dark:hover:bg-[#2a220a]"
     >
       <div>
         <div className="font-extrabold">{f.title}</div>
-        <div className="mt-1 text-sm text-slate-600">{isPdf ? "PDF" : "رابط"}</div>
+        <div className="mt-1 text-sm text-slate-600 dark:text-yellow-100/80">
+          {isPdf ? "PDF" : "رابط"}
+        </div>
       </div>
-      <span className="text-xs font-bold px-2 py-1 rounded-full bg-brand-100 border border-brand-200">
+
+      <span className="text-xs font-bold px-2 py-1 rounded-full bg-brand-100 border border-brand-200 dark:bg-yellow-100/10 dark:border-yellow-700 dark:text-yellow-100">
         فتح
       </span>
     </a>
@@ -68,7 +72,7 @@ export default function MaterialDetails() {
       <div className="flex items-center justify-between">
         <Link
           to="/resources"
-          className="inline-flex items-center gap-2 font-semibold hover:bg-brand-100 rounded-xl px-3 py-2 transition"
+          className="inline-flex items-center gap-2 font-semibold hover:bg-brand-100 rounded-xl px-3 py-2 transition dark:hover:bg-[#2a220a] dark:text-yellow-100"
         >
           ← رجوع للموارد
         </Link>
@@ -77,30 +81,33 @@ export default function MaterialDetails() {
       <div className="card p-6 md:p-8">
         {loading ? (
           <div className="animate-pulse">
-            <div className="h-4 w-24 bg-brand-100 rounded" />
-            <div className="mt-4 h-7 w-2/3 bg-slate-100 rounded" />
-            <div className="mt-2 h-4 w-1/2 bg-slate-100 rounded" />
+            <div className="h-4 w-24 bg-brand-100 dark:bg-yellow-100/10 rounded" />
+            <div className="mt-4 h-7 w-2/3 bg-slate-100 dark:bg-[#2a220a] rounded" />
+            <div className="mt-2 h-4 w-1/2 bg-slate-100 dark:bg-[#2a220a] rounded" />
           </div>
         ) : err ? (
           <div>
-            <div className="font-bold text-red-600">صار خطأ</div>
-            <div className="mt-2 text-sm text-slate-700">{err}</div>
+            <div className="font-bold text-red-600 dark:text-red-400">
+              صار خطأ
+            </div>
+            <div className="mt-2 text-sm text-slate-700 dark:text-yellow-100/80">
+              {err}
+            </div>
           </div>
         ) : !material ? (
           <div className="font-bold">المادة غير موجودة</div>
         ) : (
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full bg-brand-100 px-3 py-1 text-sm font-semibold">
-              {material.course_code ? `كود: ${material.course_code}` : "بدون كود"}
-              {material.year_level ? ` • سنة ${material.year_level}` : ""}
-            </div>
+          
 
             <h1 className="mt-4 text-2xl md:text-3xl font-extrabold">
               {material.course_name}
             </h1>
 
             {material.description && (
-              <p className="mt-3 text-slate-600 leading-7">{material.description}</p>
+              <p className="mt-3 text-slate-600 dark:text-yellow-100/80 leading-7">
+                {material.description}
+              </p>
             )}
           </div>
         )}
@@ -110,15 +117,15 @@ export default function MaterialDetails() {
         <div className="card p-6">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-extrabold">ملفات المادة</h2>
-            <span className="text-xs font-bold px-2 py-1 rounded-full bg-brand-100 border border-brand-200">
+            <span className="text-xs font-bold px-2 py-1 rounded-full bg-brand-100 border border-brand-200 dark:bg-yellow-100/10 dark:border-yellow-700 dark:text-yellow-100">
               {files.length}
             </span>
           </div>
 
           <div className="mt-4 grid gap-3">
             {files.length === 0 ? (
-              <div className="text-sm text-slate-600">
-                لا يوجد ملفات لهذه المادة بعد (أضفها من Supabase فقط).
+              <div className="text-sm text-slate-600 dark:text-yellow-100/80">
+                لا يوجد ملفات هذه المادة بعد.
               </div>
             ) : (
               files.map((f) => <FileRow key={f.id} f={f} />)

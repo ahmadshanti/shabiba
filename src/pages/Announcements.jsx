@@ -5,10 +5,10 @@ import { supabase } from "../lib/supabase";
 function SkeletonCard() {
   return (
     <div className="card p-5 animate-pulse">
-      <div className="h-4 w-24 bg-brand-100 rounded" />
-      <div className="mt-3 h-5 w-3/4 bg-slate-100 rounded" />
-      <div className="mt-2 h-4 w-full bg-slate-100 rounded" />
-      <div className="mt-2 h-4 w-2/3 bg-slate-100 rounded" />
+      <div className="h-4 w-24 bg-brand-100 dark:bg-yellow-100/10 rounded" />
+      <div className="mt-3 h-5 w-3/4 bg-slate-100 dark:bg-[#2a220a] rounded" />
+      <div className="mt-2 h-4 w-full bg-slate-100 dark:bg-[#2a220a] rounded" />
+      <div className="mt-2 h-4 w-2/3 bg-slate-100 dark:bg-[#2a220a] rounded" />
     </div>
   );
 }
@@ -46,15 +46,19 @@ export default function Announcements() {
     <div className="grid gap-4">
       <div className="card p-6">
         <h1 className="text-2xl font-extrabold">الإعلانات الهامة</h1>
-        <p className="mt-2 text-slate-600 text-sm">
+        <p className="mt-2 text-slate-600 dark:text-yellow-100/80 text-sm">
           آخر التنبيهات والقرارات الرسمية .
         </p>
       </div>
 
       {err && (
-        <div className="card p-5 border-red-200">
-          <div className="font-bold text-red-600">صار خطأ</div>
-          <div className="mt-2 text-sm text-slate-700">{err}</div>
+        <div className="card p-5 border-red-200 dark:border-red-800">
+          <div className="font-bold text-red-600 dark:text-red-400">
+            صار خطأ
+          </div>
+          <div className="mt-2 text-sm text-slate-700 dark:text-yellow-100/80">
+            {err}
+          </div>
         </div>
       )}
 
@@ -68,18 +72,24 @@ export default function Announcements() {
                 className="card p-5 hover:-translate-y-0.5 transition"
               >
                 <div className="flex items-center justify-between gap-3">
-                  <div className="text-xs text-slate-500">{a.publish_date}</div>
+                  <div className="text-xs text-slate-500 dark:text-yellow-100/60">
+                    {a.publish_date}
+                  </div>
+
                   {a.is_important && (
-                    <span className="text-xs font-bold px-2 py-1 rounded-full bg-brand-200">
+                    <span className="text-xs font-bold px-2 py-1 rounded-full bg-brand-200 dark:bg-yellow-100/10 dark:border dark:border-yellow-700 dark:text-yellow-100">
                       هام
                     </span>
                   )}
                 </div>
 
                 <div className="mt-2 text-lg font-extrabold">{a.title}</div>
-                <p className="mt-2 text-slate-600 text-sm">{a.body}</p>
 
-                <div className="mt-4 inline-flex font-semibold text-ink underline decoration-brand-300">
+                <p className="mt-2 text-slate-600 dark:text-yellow-100/80 text-sm">
+                  {a.body}
+                </p>
+
+                <div className="mt-4 inline-flex font-semibold text-brand-800 underline decoration-brand-300 hover:text-brand-900 dark:text-yellow-100 dark:decoration-yellow-400 dark:hover:text-yellow-300">
                   اقرأ المزيد →
                 </div>
               </Link>

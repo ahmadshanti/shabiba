@@ -17,7 +17,11 @@ export default function MajorResources() {
       setErr("");
 
       const [majRes, matRes] = await Promise.all([
-        supabase.from("majors").select("id,name,college_id,description").eq("id", majorId).single(),
+        supabase
+          .from("majors")
+          .select("id,name,college_id,description")
+          .eq("id", majorId)
+          .single(),
         supabase
           .from("materials")
           .select("id,course_name,course_code,year_level,description,created_at")
@@ -48,7 +52,7 @@ export default function MajorResources() {
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <Link
           to="/resources"
-          className="inline-flex items-center gap-2 font-semibold hover:bg-brand-100 rounded-xl px-3 py-2 transition"
+          className="inline-flex items-center gap-2 font-semibold hover:bg-brand-100 rounded-xl px-3 py-2 transition dark:hover:bg-[#2a220a] dark:text-yellow-100"
         >
           ← الموارد
         </Link>
@@ -56,7 +60,7 @@ export default function MajorResources() {
         {major?.college_id && (
           <Link
             to={`/resources/colleges/${major.college_id}`}
-            className="inline-flex items-center gap-2 font-semibold hover:bg-brand-100 rounded-xl px-3 py-2 transition"
+            className="inline-flex items-center gap-2 font-semibold hover:bg-brand-100 rounded-xl px-3 py-2 transition dark:hover:bg-[#2a220a] dark:text-yellow-100"
           >
             ← رجوع لتخصصات الكلية
           </Link>
@@ -66,22 +70,28 @@ export default function MajorResources() {
       <div className="card p-6">
         {loading ? (
           <div className="animate-pulse">
-            <div className="h-6 w-2/3 bg-slate-100 rounded" />
-            <div className="mt-2 h-4 w-1/2 bg-slate-100 rounded" />
+            <div className="h-6 w-2/3 bg-slate-100 dark:bg-[#2a220a] rounded" />
+            <div className="mt-2 h-4 w-1/2 bg-slate-100 dark:bg-[#2a220a] rounded" />
           </div>
         ) : err ? (
           <div>
-            <div className="font-bold text-red-600">صار خطأ</div>
-            <div className="mt-2 text-sm">{err}</div>
+            <div className="font-bold text-red-600 dark:text-red-400">
+              صار خطأ
+            </div>
+            <div className="mt-2 text-sm dark:text-yellow-100/80">{err}</div>
           </div>
         ) : (
           <>
-            <div className="text-sm text-slate-500">التخصص</div>
+            <div className="text-sm text-slate-500 dark:text-yellow-100/60">
+              التخصص
+            </div>
             <h1 className="mt-2 text-2xl font-extrabold">{major?.name}</h1>
             {major?.description && (
-              <p className="mt-2 text-slate-600 text-sm">{major.description}</p>
+              <p className="mt-2 text-slate-600 dark:text-yellow-100/80 text-sm">
+                {major.description}
+              </p>
             )}
-            <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-brand-100 px-3 py-1 text-sm font-semibold">
+            <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-brand-100 px-3 py-1 text-sm font-semibold dark:bg-yellow-100/10 dark:border dark:border-yellow-700 dark:text-yellow-100">
               اختر مادة لعرض الملفات
             </div>
           </>
@@ -95,24 +105,17 @@ export default function MajorResources() {
             to={`/materials/${m.id}`}
             className="card p-5 hover:-translate-y-0.5 transition"
           >
-            <div className="flex items-center justify-between gap-3">
-              <div className="text-xs text-slate-500">
-                {m.course_code ? `كود: ${m.course_code}` : "بدون كود"}
-              </div>
-              {m.year_level ? (
-                <span className="text-xs font-bold px-2 py-1 rounded-full bg-brand-100 border border-brand-200">
-                  سنة {m.year_level}
-                </span>
-              ) : null}
-            </div>
+            
 
             <div className="mt-2 text-lg font-extrabold">{m.course_name}</div>
 
             {m.description && (
-              <p className="mt-2 text-sm text-slate-600">{m.description}</p>
+              <p className="mt-2 text-sm text-slate-600 dark:text-yellow-100/80">
+                {m.description}
+              </p>
             )}
 
-            <div className="mt-4 inline-flex font-semibold text-ink underline decoration-brand-300">
+            <div className="mt-4 inline-flex font-semibold text-brand-800 underline decoration-brand-300 hover:text-brand-900 dark:text-yellow-100 dark:decoration-yellow-400 dark:hover:text-yellow-300">
               عرض الملفات →
             </div>
           </Link>
